@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 <html lang="en">
   <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
    <title>HeatMap</title>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <!-- <link rel="stylesheet" type="text/css" href="capstonestyle.css"> -->
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
       <link href="https://fonts.googleapis.com/css?family=Dosis|Staatliches" rel="stylesheet">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <link rel="stylesheet" type="text/css" href="capstonestyle.css">
@@ -145,29 +142,30 @@
     font-size: 120%;
   }
 
-.chartcontainer {
-  float: left;
-  width: 100%;
-  /* padding: 2%; */
-}
+  .chartcontainer {
+    float: left;
+    width: 100%;
+    /* padding: 2%; */
+  }
 
-#chartwrapper {
-  border-radius: 15px;
-  /* padding: 2%; */
-}
+  #chartwrapper {
+    border-radius: 15px;
+    /* padding: 2%; */
+  }
 
-.regression {
-		  stroke-width: 2px;
-		  stroke: steelblue;
-		  stroke-dasharray: 10,5;
-		}
+  .regression {
+  		  stroke-width: 2px;
+  		  stroke: steelblue;
+  		  stroke-dasharray: 10,5;
+  }
 </style>
-    <!-- </style> -->
 <body>
 <?php
     include "menu.php";
  ?>
  <h2>Food Security Interactive Heatmap</h2>
+
+  <!-- accordion -->
 	<button class="accordion">Interacting with the Heatmap</button>
 	<div class="panel">
   		<p>Select an attribute from the dropdown menu to the left to view filtered data for each country.</p>
@@ -184,69 +182,94 @@
 	</div>
 
 
+  <!-- div for first dropdown menu -->
   <div id="maphead" >
     <span id="menu"></span>
   </div>
 
-  <!-- map div -->
-<div class="centerdiv container-fluid text-center" style="text-align: center; padding-bottom: 20%;">
-  <div id="svgdiv" class="col-12">
-    <svg id="svgmap" width="960" height="600" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet"></svg>
-    <div class="tooltip"></div>
-  </div>
-
-  <div id="chartwrapper" style="margin-left: 2%; margin-right: 2%; margin-bottom:3%; padding-top:5%;">
-    <!-- <div id="space"></div> -->
-
-  <div id="select2" class="col-12"  >
-    <span id="menu2" style="display: inline-block;"></span>
-  </div>
-  <!-- bar chart div -->
-  <div class="row" style="padding: 2%;">
-    <div id="bardiv" style="text-align: center; margin-bottom:5%; background-color: #F9F8F8;" height="600" class="chartcontainer col-sm-6">
-      <!-- <svg id="svgbar" > -->
-        <!-- width="660" height="300" viewBox="0 0 660 300" preserveAspectRatio="xMidYMid meet" -->
-      <!-- </svg> -->
+  <!-- div that holds map and charts -->
+  <div class="centerdiv container-fluid text-center" style="text-align: center; padding-bottom: 20%;">
+    <!-- map div -->
+    <div id="svgdiv" class="col-12">
+      <svg id="svgmap" width="960" height="600" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="tooltip">
+      </div>
     </div>
 
-    <!-- scatter chart div -->
-    <div id="scatterdiv" style="text-align: center; margin-bottom:5%; background-color: #F9F8F8;" height="600" class="chartcontainer col-sm-6">
-      <!-- <svg id="svgscatter"></svg> -->
-      <div class="tooltipSct hidden"></div>
-        <!-- width="660" height="300" viewBox="0 0 660 300" preserveAspectRatio="xMidYMid meet" -->
+    <!-- container div for second dropdown, bar, and scatter -->
+    <div id="chartwrapper" style="margin-left: 2%; margin-right: 2%; margin-bottom:3%; padding-top:5%;">
+
+      <!-- div for second menu -->
+      <div id="select2" class="col-12"  >
+        <span id="menu2" style="display: inline-block;"></span>
+      </div>
+
+      <!-- div that holds and aligns charts next to each other -->
+      <div class="row" style="padding: 2%;">
+
+        <!-- bar div -->
+        <div id="bardiv" style="text-align: center; margin-bottom:5%; background-color: #F9F8F8;" height="600" class="chartcontainer col-sm-6">
+        </div>
+
+        <!-- scatter chart div -->
+        <div id="scatterdiv" style="text-align: center; margin-bottom:5%; background-color: #F9F8F8;" height="600" class="chartcontainer col-sm-6">
+          <div class="tooltipSct hidden"></div>
+        </div>
+
+      </div>
+
+      <!-- div for tables -->
+      <div class="row" style="padding: 2%;">
+        <div class="col-sm-12">
+          <p> this is where the table would go! </p>
+		  
+		      <div id="tablediv" style="text-align: center; margin-bottom:5%; background-color: #F9F8F8;" height="600" class="chartcontainer col-sm-6">
+			  
+			  
+        </div>
+		  
+		  
+		  
+
+        </div>
+      </div>
+
+
     </div>
+	
   </div>
-</div>
-</div>
- 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="https://d3js.org/topojson.v1.min.js"></script>
-    <script src="https://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
-    <script src="https://d3js.org/d3-queue.v3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/simple-statistics@7.0.2/dist/simple-statistics.min.js"></script>
 
-    <script type='text/javascript' src='script32.js'></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/simple-statistics@7.0.2/dist/simple-statistics.min.js"></script>
+  <script type='text/javascript' src='script_alex.js'></script>
 
-<script>
-var acc = document.getElementsByClassName("accordion");
-var i;
+  <script>
+  //build accordion
+  var acc = document.getElementsByClassName("accordion");
+  var i;
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.maxHeight){
-      panel.style.maxHeight = null;
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + "px";
-    }
-  });
-}
-</script>
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.maxHeight){
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  }
+  
+  </script>
+  
+  
 </body>
 <footer id="foot" >
     Copyright &copy; 2019 - Capstone Group Project #1
