@@ -109,34 +109,6 @@ function setReg(d) {
   d.region = region.get(d.id) || 0;
   return d.region;
 }
-// function setPol(d) {
-//   d.polity = polity.get(d.id) || 0;
-//   return d.polity;
-// }
-// function setln(d) {
-//   d.lnyUN = lnyUN.get(d.id) || 0;
-//   return d.lnyUN;
-// }
-// function setSchool(d) {
-//   d.schoolOECD = schoolOECD.get(d.id) || 0;
-//   return d.schoolOECD;
-// }
-// function setName(d) {
-//   d.country_name = country_name.get(d.id) || 0;
-//   return d.country_name;
-// }
-// function setGin(d) {
-//   d.gin = gin.get(d.id) || 0;
-//   return d.gin;
-// }
-// function setCode(d) {
-//   d.country_code = code.get(d.id) || 0;
-//   return d.country_code;
-// }
-// function setWaste(d) {
-//   d.waste = waste.get(d.id) || 0;
-//   return d.waste;
-// }
 
 //function to occur on .mousemove event on the map
 function mousemovef(d){
@@ -232,7 +204,7 @@ function mousemovesc(d) {
 //set radius of circles for scatterplot
 function radius(d){
   if (d["Country Name"] == bar_data[0].country || d["Country Code"] == bar_data[1].country || d["Country Code"] == bar_data[2].country) {
-    size = 5.5;
+    size = 7.5;
     return size;
   } else {
     size = 3.5;
@@ -263,29 +235,6 @@ function dotFill(d) {
   }
 }
 
-// function mapFill (d){
-//   // Pull data for this country
-//   d[selectValue] = data.get(d.id) || 0;
-//   // Set the color
-//   return colorScale(d[selectValue]);
-// }
-
-//calculate linear regression trend line
-function calcline(d){
-  xvalues = [];
-  yvalues = [];
-
-
-  d.forEach(function(d,i){
-    if (d.lnyUN > 0 && d[selectValue] > 0){
-      xvalues.push(d.lnyUN);
-      yvalues.push(d[selectValue]);
-    }
-  })
-    console.log("xvals", xvalues);
-    console.log("yvals", yvalues);
-}
-
 
 		// Takes 5 parameters:
     // (1) Your data
@@ -301,21 +250,6 @@ function calcLinear(d, x, y, minX, minY){
       //SLOPE//
       /////////
 
-      // function isNumber(obj) {
-      //   return obj !== undefined && typeof(obj) === 'number' && !isNaN(obj);
-      // }
-      //
-      // function filterByID(item) {
-      //   if (isNumber(item.id) && item.id !== 0) {
-      //     return true;
-      //   }
-      //   // invalidEntries++;
-      //   return false;
-      // }
-      //
-      // var arrByID = d.filter(filterByID);
-      // console.log("array", arrByID);
-
 
       // Let n = the number of data points
       var n = d.length;
@@ -325,22 +259,6 @@ function calcLinear(d, x, y, minX, minY){
       var pts = [];
       d.forEach(function(d,i){
 
-      // xvalues = function(d) {
-      //     if (isNaN(d.lnyUN)) {
-      //     return 0;
-      //   } else {
-      //     return (d.lnyUN);
-      //   }
-      // };
-      //
-      // yvalues = function(d) {
-      //     if (isNaN(d[selectValue])) {
-      //     return 0;
-      //   } else {
-      //     return (d[selectValue]);
-      //   }
-      // };
-        // console.log(xvalues(d));
         var obj = {};
         obj.x = d[x];
         obj.y = d[y];
@@ -396,7 +314,9 @@ function calcLinear(d, x, y, minX, minY){
       // Plug the values you have calculated for e and f into the following equation for the y-intercept
       // y-intercept = b = (e - f) / n
       var b = (e - f) / n;
-      console.log("y iny", b);
+      console.log("y int", b);
+      console.log("y = ", m, "x + ", b)
+
 
 
 			// Print the equation below the chart
@@ -405,14 +325,24 @@ function calcLinear(d, x, y, minX, minY){
 
       // return an object of two points
       // each point is an object with an x and y coordinate
+      if (m<1) {
+        y2cal = (10 * m) + b;
+        x2cal = 10;
+      } else {
+        y2cal = 10;
+        x2cal = (10 - b) / m;
+      }
+
+
       return {
         ptA : {
-          x: minX,
+          x: 0,
           y: m * minX + b
         },
         ptB : {
-          y: minY,
-          x: (minY - b) / m
+          y: y2cal,
+          x: x2cal
+          // (10 - b) / m
         }
       }
       console.log(ptA);
@@ -420,25 +350,25 @@ function calcLinear(d, x, y, minX, minY){
 }
 
 
-function getDivWidth (div) {
-  var widthdiv = d3.select(div)
-    // get the width of div element
-    .style('width')
-    // take of 'px'
-    .slice(0, -2)
-  // return as an integer
-  return Math.round(Number(widthdiv))
-}
-
-function getDivHeight (div) {
-  var heightdiv = d3.select(div)
-    // get the width of div element
-    .style('height')
-    // take of 'px'
-    .slice(0, -2)
-  // return as an integer
-  return Math.round(Number(heightdiv))
-}
+// function getDivWidth (div) {
+//   var widthdiv = d3.select(div)
+//     // get the width of div element
+//     .style('width')
+//     // take of 'px'
+//     .slice(0, -2)
+//   // return as an integer
+//   return Math.round(Number(widthdiv))
+// }
+//
+// function getDivHeight (div) {
+//   var heightdiv = d3.select(div)
+//     // get the width of div element
+//     .style('height')
+//     // take of 'px'
+//     .slice(0, -2)
+//   // return as an integer
+//   return Math.round(Number(heightdiv))
+// }
 
 //declare variables for the scatterplot
 var xValueSct = function(d) {
@@ -452,12 +382,12 @@ var yValueSct = function(d) {
 }  // data -> value
 
 var marginsct = {top: 70, right: 30, bottom: 30, left: 50},
-    widthsct = getDivWidth("#scatterdiv"),
-    heightsct = getDivHeight("#scatterdiv");
+    // widthsct = getDivWidth("#scatterdiv"),
+    // heightsct = getDivHeight("#scatterdiv");
 
     xScaleSct = d3.scaleLinear()
       .domain([0, 10])
-      .range([0, 500]), // value -> display  .domain([0, 10])
+      .range([0, 550]), // value -> display  .domain([0, 10])
     xMapSct = function(d) {
         return xScaleSct(xValueSct(d))
     ;}, // data -> display
@@ -465,7 +395,7 @@ var marginsct = {top: 70, right: 30, bottom: 30, left: 50},
 
     yScaleSct = d3.scaleLinear()
       .domain([0, 10])
-      .range([300, 0]),
+      .range([350, 0]),
     yMapSct = function(d) { return yScaleSct(yValueSct(d));}, // data -> display
     yAxisSct = d3.axisLeft().scale(yScaleSct).ticks(5);
 
@@ -498,8 +428,6 @@ $(window).on("resize", function() {
   sct_chart.attr("height", Math.round((targetWidth_sct / aspect_sct)));
 }).trigger("resize");
 
-
-
 //Table svg
 var table_chart = $("#svgtable"),
   aspect_table = table_chart.width() / table_chart.height(),
@@ -510,9 +438,10 @@ $(window).on("resize", function() {
   table_chart.attr("height", Math.round((targetWidth_table / aspect_table)*0.8));
 }).trigger("resize");
 
-
 //function called when user clicks on a country in the map
 function createcharts(d){
+  d3.select("#chartwrapper").classed("hidden", false);
+
   //on click, scroll down to details in section below
   $('html,body').animate({
         scrollTop: $("#chartwrapper").offset().top},
@@ -520,11 +449,17 @@ function createcharts(d){
 
   //remove second dropdown menu to start from scratch
   d3.select("#menu2").selectAll("select").remove();
+  d3.select("#chartheader").selectAll().remove();
+  d3.select("#scrollup").selectAll("button").remove();
+  d3.select("#tablediv").selectAll("table").remove();
+
   //set background color of details section
   d3.select("#chartwrapper").style("background-color", "#F9F8F8");
+  d3.select("#scrollup").classed("hidden", false);
+
 
   //build second drop down menu for details
-  var data2 = ["Update Charts Below With New Attribute", "schoolOECD", "waste", "lnyUN", "GINIW", "polity"];
+  var data2 = ["Update Charts Below", "schoolOECD", "waste", "lnyUN", "GINIW", "polity"];
   var select2 = d3.select('#menu2')
     .attr("margin-top", "14%")
     .append('select')
@@ -541,6 +476,7 @@ function createcharts(d){
       d.country_code = code.get(d.id) || "-";
       d.country_name = country_name.get(d.id) || "-";
       d.region = region.get(d.id) || "-";
+
       mapcountry = d.country_name;
       mapregion = d.region;
       mapcode = d.country_code;
@@ -550,6 +486,8 @@ function createcharts(d){
   console.log("country", mapcountry);
   console.log("reg", mapregion);
   console.log("code", mapcode);
+  // console.log("region", fullregion);
+
 
   //reload data, call fxn buildcharts
   d3.queue()
@@ -571,12 +509,30 @@ function buildcharts(error, d) {
   //remove existing charts
   d3.select("#svgbar").selectAll("g").remove();
   d3.select("#svgscatter").selectAll("g").remove();
-  d3.select("#svgtable").selectAll("g").remove();
   d3.select("#bardiv").selectAll("svg").remove();
   d3.select("#bardiv").selectAll("rect").remove();
   d3.select("#scatterdiv").selectAll("svg").remove();
   d3.select("#svgscatter").selectAll(".dot").remove();
-  d3.select("#svgtable").selectAll(".svg").remove();
+  d3.select("#chartheader").selectAll("p").remove();
+  d3.select("#chartheader").selectAll("hr").remove();
+  d3.select("#scrollup").selectAll("button").remove();
+  d3.select("#tablediv").selectAll("table").remove();
+
+
+
+  d3.select("#chartheader")
+    .append("p")
+      .attr("id", "titleheader")
+      .html(title)
+  d3.select("#chartheader")
+    .append("p")
+      .attr("id", "geoheader")
+      .html(mapcountry + ", " + mapregion);
+  d3.select("#chartheader")
+    .append("hr")
+      .attr("id", "hr");
+
+
 
   //create object to hold the bar chart data - country, region, and world values
   if (mapregion != "-") {
@@ -601,30 +557,31 @@ function buildcharts(error, d) {
         .attr("padding-bottom", "5%")
         .attr("viewBox", "0 0 700 450");
     const chartbar = svgbar.append('g')
-      .attr('transform', `translate(100, 70)`);
+      .attr('transform', `translate(100, 50)`);
     //
     const yScaleBar = d3.scaleLinear()
-      .range([300, 0])
+      .range([350, 0])
       .domain([0, 10]);
 
     //x axis
     const xScaleBar = d3.scaleBand()
-      .range([0, 500])
+      .range([0, 550])
       .domain(bar_data.map((s) => s.country))
       .padding(0.25);
 
     //y axis
+    xaxbar = d3.axisLeft().scale(yScaleBar).ticks(5);
     chartbar.append('g')
       .attr('id', "yscalebar")
-      .call(d3.axisLeft(yScaleBar))
-      .style("font-size", '0.95em');
+      .call(xaxbar)
+      .style("font-size", '1.2em');
 
     //x axis, labels
     chartbar.append('g')
       .attr("id", "labels")
-      .attr('transform', `translate(0, 300)`)
+      .attr('transform', `translate(0, 350)`)
       .call(d3.axisBottom(xScaleBar))
-      .style("font-size", '0.95em');
+      .style("font-size", '1.2em');
 
     //bars
     chartbar.selectAll()
@@ -635,61 +592,94 @@ function buildcharts(error, d) {
       .attr("fill", (s) => colorScale(s.value_bar))
       .attr('x', (s) => xScaleBar(s.country))
       .attr('y', (s) => yScaleBar(s.value_bar))
-      .attr('height', (s) => 300 - yScaleBar(s.value_bar))
+      .attr('height', (s) => 350 - yScaleBar(s.value_bar))
       .attr('width', xScaleBar.bandwidth());
+
+    xlabel = function(s) {
+      valuebar = s.value_bar;
+
+      if (isNaN(s.value_bar)) {
+        valuebar_round = " ";
+      } else {
+        valuebar_round = (Math.floor(valuebar * 100) / 100 );
+      }
+
+      return valuebar_round;
+    }
+
+    chartbar.selectAll()
+      .data(bar_data)
+      .enter()
+      .append('text')
+        .attr("id","datalabels")
+        .text(xlabel)
+        .style("font-size", '1.3em')
+        .style("color", 'white')
+        .style("font-weight", 'bold')
+        .attr("x", (s) => xScaleBar(s.country)+ 47)
+        .attr("y", (s) => yScaleBar(s.value_bar) + 30);
+
   };
+
 
   //Data table test
 var tabulate = function (data,columns) {
-  var table = d3.select('body').append('table')
-	var thead = table.append('tablediv')
-	var tbody = table.append('tbody')
+ var thead = d3.select('#tablediv').append('table');
+ 
+  thead.selectAll('th')
+    .data(columns)
+    .enter()
+    .append('th')
+    .text(function (d) { return d });
+	
 
-	thead.append('tr')
-	  .selectAll('th')
-	    .data(columns)
-	    .enter()
-	  .append('th')
-	    .text(function (d) { return d })
 
-	var rows = tbody.selectAll('tr')
-	    .data(data)
-	    .enter()
-	  .append('tr')
 
-	var cells = rows.selectAll('td')
-	    .data(function(row) {
-	    	return columns.map(function (column) {
-	    		return { column: column, value: row[column] }
-	      })
+ var rows = thead.selectAll('tr').data(data).enter().append('tr');
+//var filteredrows = rows.filter(function(data,i){return i == 1;});
+ var filteredrows= rows.filter(function(row){
+	 return row['Country Name'] == bar_data[0].country;
+	 return row['Country Name'] == 'World';
+ }) ;
+ 
+  var worlddata = rows.filter(function(w){
+
+	 return w['Country Name'] == 'World';
+ }) ;
+ 
+ 
+  var cells = filteredrows.selectAll('td')
+    .data(function(row) {
+      return columns.map(function (column) {
+        return { column: column, value: row[column] }
+		
       })
-      .enter()
+    })
+    .enter()
     .append('td')
-      .text(function (d) { return d.value })
+    .text(function (d) { return d.value });
 
-  return table;
 }
 
+
+
+
+	 
 d3.csv('milestone2.csv',function (data) {
-	var columns = ['waste','GINIW','polity','lnyUN']
-  tabulate(data,columns)
+ var columns = ['Country Name','waste','GINIW','polity','lnyUN']
+ 
+ tabulate(data,columns)
 })
 
-  
-  
+
+
+
+
   //reload data for scatter chart **currently in progress**
   d3.csv(hostdata,function(data){
 
       linevalues = [];
       yvalues = [];
-
-
-      // d.forEach(function(d,i){
-      //   if (d.lnyUN > 0 && d[selectValue] > 0){
-      //     xvalues.push(d.lnyUN);
-      //     yvalues.push(d[selectValue]);
-      //   }
-      // })
 
       data.forEach(function(d,i){
         var obj = {};
@@ -700,70 +690,11 @@ d3.csv('milestone2.csv',function (data) {
           obj.y = +d[selectValue];
           obj.mult = obj.x*obj.y;
           linevalues.push(obj);
-          // xvalues.push(d.lnyUN);
-          // yvalues.push(d[selectValue]);
         }
       })
       console.log(linevalues);
-      //
-      //     yvalues.push(d[selectValue]);
-      //   }
-      // })
-        // console.log("xvals", xvalues);
-        // console.log("yvals", yvalues);
 
-        // dataline =  _.zipWith(xvalues, yvalues, (waste, selectvalueval) => (
-        //             {
-        //               x: waste,
-        //               y: selectvalueval
-        //             }
-        //           ))
-
-
-
-      // xvalues = function(d) {
-      //     if (isNaN(d.lnyUN)) {
-      //     return 0;
-      //   } else {
-      //     return xScaleSct(d.lnyUN);
-      //   }
-      // };
-      //
-      // yvalues = function(d) {
-      //     if ((d[selectValue]) === d[selectValue]) {
-      //     return yScaleSct(d[selectValue]);
-      //   } else {
-      //     return 0;
-      //   }
-      // };
-
-      minxdata = 0;
-      // xScaleSct(1);
-      // d3.min(d, function(d){
-      //   return d.lnyUN;
-      // });
-
-      minydata = 0;
-      // yScaleSct(1);
-
-      // d3.min(data, function(d){
-      //   return d[selectValue];
-      // });
-      // var calclinevals = calcline(d);
-      // console.log(xvalues(d));
-      //
-      var lg = calcLinear(linevalues, "x", "y", minxdata, minydata);
-      // console.log(lg.ptA);
-      // console.log(lg.ptB);
-
-      // var x = function(d) {
-      //     return xScaleSct(xValueSct(d))
-      // ;};
-      // // xScaleSct(d.lnyUN);
-  	  // var y = function(d) { return yScaleSct(yValueSct(d));};
-      // // yScaleSct(d[selectValue]);
-      // console.log(x, y);
-
+      var lg = calcLinear(linevalues, "x", "y", 0, 0);
 
       const svgSct = d3.select('#scatterdiv')
         .append('svg')
@@ -772,23 +703,20 @@ d3.csv('milestone2.csv',function (data) {
           .attr("padding-bottom", "5%")
           .attr("viewBox", "0 0 700 450");
 
-        console.log("SCt", heightsct, widthsct);
       const chartSct = svgSct.append('g')
-        .attr("transform", "translate(100, 70)");
-        // marginsct.left + "," + marginsct.top + ")");
+        .attr("transform", "translate(50, 50)");
 
       // add the tooltip area to the webpage
       var tooltipSct = d3.select("div.tooltipSct");
       // x-axis
       chartSct.append("g")
          .attr("id", "xaxis")
-         .attr("transform", "translate(0, 300)")
-         // + heightsct*2.8 + ")")
+         .attr("transform", "translate(0, 350)")
          .call(xAxisSct)
-         .style("font-size", '0.95em')
+         .style("font-size", '1.2em')
        .append("text")
          .attr("class", "caption")
-         .attr("x", 500)
+         .attr("x", 550)
          .attr("y", -6)
          .style("text-anchor", "end")
          .text("GDP Per Capita");
@@ -797,7 +725,7 @@ d3.csv('milestone2.csv',function (data) {
       chartSct.append("g")
           .attr("id", "yaxis")
           .call(yAxisSct)
-          .style("font-size", '0.95em')
+          .style("font-size", '1.2em')
         .append("text")
           .attr("class", "caption")
           .attr("transform", "rotate(-90)")
@@ -806,6 +734,19 @@ d3.csv('milestone2.csv',function (data) {
           .style("text-anchor", "end")
           .text(title);
 
+      //draw regression line
+      x1 = xScaleSct(lg.ptA.x);
+      y1 = yScaleSct(lg.ptA.y);
+      x2 = xScaleSct(lg.ptB.x);
+      y2 = yScaleSct(lg.ptB.y);
+
+      chartSct.append("g")
+        .append("line")
+	        .attr("class", "regression")
+	        .attr("x1", x1)
+	        .attr("y1", y1)
+	        .attr("x2", x2)
+	        .attr("y2", y2);
 
         // draw dots
       chartSct.selectAll(".dot")
@@ -839,17 +780,20 @@ d3.csv('milestone2.csv',function (data) {
           })
           .on("mousemove", mousemovesc)
           .on("mouseout", mouseoutsc);
-    //
-      console.log(lg.ptA.x);
-      chartSct.append("line")
-    	        .attr("class", "regression")
-    	        .attr("x1", xScaleSct(lg.ptA.x))
-    	        .attr("y1", yScaleSct(lg.ptA.y))
-    	        .attr("x2", xScaleSct(lg.ptB.x))
-    	        .attr("y2", yScaleSct(lg.ptB.y));
-
     })
-    //
+
+  d3.select("#scrollup")
+    .append("button")
+      .attr("id", "scrolluplink")
+      .text("Scroll up to map")
+      .on("click", function(){
+        $('html,body').animate({
+              scrollTop: $("#heading").offset().top},
+              'slow');
+
+      });
+
+
 }
 
 //updates charts when new variable selected from second drop down
@@ -869,9 +813,12 @@ function updatecharts() {
   d3.select("#svgbar").selectAll("rect").remove();
   d3.select("#svgscatter").selectAll("g").remove();
   d3.select("#svgscatter").selectAll(".dot").remove();
-  
-   d3.select("#svgtable").selectAll("g").remove();
-  
+  d3.select("#chartheader").selectAll("p").remove();
+  d3.select("#chartheader").selectAll("hr").remove();
+  d3.select("#scrollup").selectAll("button").remove();
+  d3.select("#tablediv").selectAll("table").remove();
+
+
 
   //reload data
   d3.queue()
@@ -883,253 +830,6 @@ function updatecharts() {
 
 }
 
-// function buildcharts(error, d) {
-//
-//   if (error) throw error;
-//   console.log("buildcharts", selectValue);
-//   console.log("buildcharts", mapcountry);
-//   console.log("buildcharts", mapregion);
-//
-//   d3.select("#svgbar").selectAll("g").remove();
-//   d3.select("#svgscatter").selectAll("g").remove(); //remove existing scatter chart
-//   d3.select("#bardiv").selectAll("svg").remove();
-//   d3.select("#bardiv").selectAll("rect").remove();
-//   d3.select("#scatterdiv").selectAll("svg").remove();
-//   d3.select("#svgscatter").selectAll(".dot").remove();
-//
-//     console.log("div", getDivWidth('#bardiv'));
-//     console.log("div", getDivHeight('#bardiv'));
-//
-//       if (mapregion != "-") {
-//         new_id = mapregion;
-//         bar_data = [{country: mapcountry,
-//                   value_bar: (d[selectValue] = data.get(mapcode))},
-//                   {country: new_id,
-//                   value_bar: (d[selectValue] = data.get(new_id))},
-//                   {country: "World",
-//                   value_bar: (d[selectValue] = data.get("World"))}
-//                   ];
-//
-//     console.log("bardata", bar_data[0], bar_data[1], bar_data[2]);
-//         const marginbar = 70;
-//         const widthbar = 700;
-//         const heightbar = 450;
-//         const svgbar = d3.select('#bardiv')
-//           .append("svg")
-//             .attr("width", "100%")
-//             .attr("height", 450)
-//             .attr("padding-bottom", "5%")
-//             .attr("viewBox", "0 0 700 450");
-//         const chartbar = svgbar.append('g')
-//           .attr('transform', `translate(100, 70)`);
-//     //
-//         const yScaleBar = d3.scaleLinear()
-//           .range([300, 0])
-//           .domain([0, 10]);
-//
-//         const xScaleBar = d3.scaleBand()
-//           .range([0, 500])
-//           .domain(bar_data.map((s) => s.country))
-//           .padding(0.25);
-//
-//         chartbar.append('g')
-//           .attr('id', "yscalebar")
-//           .call(d3.axisLeft(yScaleBar))
-//           .style("font-size", '0.95em');
-//
-//         chartbar.append('g')
-//           .attr("id", "labels")
-//           .attr('transform', `translate(0, 300)`)
-//           .call(d3.axisBottom(xScaleBar))
-//           .style("font-size", '0.95em');
-//
-//         chartbar.selectAll()
-//           .data(bar_data)
-//           .enter()
-//           .append('rect')
-//           .attr("class", "bar")
-//           .attr("fill", (s) => colorScale(s.value_bar))
-//           .attr('x', (s) => xScaleBar(s.country))
-//           .attr('y', (s) => yScaleBar(s.value_bar))
-//           .attr('height', (s) => 300 - yScaleBar(s.value_bar))
-//           .attr('width', xScaleBar.bandwidth());
-//       };
-//     //
-//     d3.csv(hostdata,function(data){
-//
-//       linevalues = [];
-//       yvalues = [];
-//
-//
-//       // d.forEach(function(d,i){
-//       //   if (d.lnyUN > 0 && d[selectValue] > 0){
-//       //     xvalues.push(d.lnyUN);
-//       //     yvalues.push(d[selectValue]);
-//       //   }
-//       // })
-//
-//       data.forEach(function(d,i){
-//         var obj = {};
-//         if (isNaN(d.lnyUN) || isNaN(d[selectValue])){
-//           return false;
-//         } else {
-//           obj.x = +d.lnyUN;
-//           obj.y = +d[selectValue];
-//           obj.mult = obj.x*obj.y;
-//           linevalues.push(obj);
-//           // xvalues.push(d.lnyUN);
-//           // yvalues.push(d[selectValue]);
-//         }
-//       })
-//       console.log(linevalues);
-//       //
-//       //     yvalues.push(d[selectValue]);
-//       //   }
-//       // })
-//         // console.log("xvals", xvalues);
-//         // console.log("yvals", yvalues);
-//
-//         // dataline =  _.zipWith(xvalues, yvalues, (waste, selectvalueval) => (
-//         //             {
-//         //               x: waste,
-//         //               y: selectvalueval
-//         //             }
-//         //           ))
-//
-//
-//
-//       // xvalues = function(d) {
-//       //     if (isNaN(d.lnyUN)) {
-//       //     return 0;
-//       //   } else {
-//       //     return xScaleSct(d.lnyUN);
-//       //   }
-//       // };
-//       //
-//       // yvalues = function(d) {
-//       //     if ((d[selectValue]) === d[selectValue]) {
-//       //     return yScaleSct(d[selectValue]);
-//       //   } else {
-//       //     return 0;
-//       //   }
-//       // };
-//
-//       minxdata = 0;
-//       // xScaleSct(1);
-//       // d3.min(d, function(d){
-//       //   return d.lnyUN;
-//       // });
-//
-//       minydata = 0;
-//       // yScaleSct(1);
-//
-//       // d3.min(data, function(d){
-//       //   return d[selectValue];
-//       // });
-//       // var calclinevals = calcline(d);
-//       // console.log(xvalues(d));
-//       //
-//       var lg = calcLinear(linevalues, "x", "y", minxdata, minydata);
-//       // console.log(lg.ptA);
-//       // console.log(lg.ptB);
-//
-//       // var x = function(d) {
-//       //     return xScaleSct(xValueSct(d))
-//       // ;};
-//       // // xScaleSct(d.lnyUN);
-//   	  // var y = function(d) { return yScaleSct(yValueSct(d));};
-//       // // yScaleSct(d[selectValue]);
-//       // console.log(x, y);
-//
-//
-//       const svgSct = d3.select('#scatterdiv')
-//         .append('svg')
-//           .attr("width", "100%")
-//           .attr("height", 450)
-//           .attr("padding-bottom", "5%")
-//           .attr("viewBox", "0 0 700 450");
-//
-//         console.log("SCt", heightsct, widthsct);
-//       const chartSct = svgSct.append('g')
-//         .attr("transform", "translate(100, 70)");
-//         // marginsct.left + "," + marginsct.top + ")");
-//
-//       // add the tooltip area to the webpage
-//       var tooltipSct = d3.select("div.tooltipSct");
-//       // x-axis
-//       chartSct.append("g")
-//          .attr("id", "xaxis")
-//          .attr("transform", "translate(0, 300)")
-//          // + heightsct*2.8 + ")")
-//          .call(xAxisSct)
-//          .style("font-size", '0.95em')
-//        .append("text")
-//          .attr("class", "caption")
-//          .attr("x", 500)
-//          .attr("y", -6)
-//          .style("text-anchor", "end")
-//          .text("GDP Per Capita");
-//
-//          // y-axis
-//       chartSct.append("g")
-//           .attr("id", "yaxis")
-//           .call(yAxisSct)
-//           .style("font-size", '0.95em')
-//         .append("text")
-//           .attr("class", "caption")
-//           .attr("transform", "rotate(-90)")
-//           .attr("y", 6)
-//           .attr("dy", ".71em")
-//           .style("text-anchor", "end")
-//           .text(title);
-//
-//
-//         // draw dots
-//       chartSct.selectAll(".dot")
-//           .data(data)
-//         .enter().append("circle")
-//           .attr("class", "dot")
-//           .attr("id", function (d) {
-//             return d["Country Code"];
-//           })
-//           .attr("r", radius)
-//           .attr("cx", (d)=> xScaleSct(d.lnyUN))
-//           .attr("cy", (d)=> yScaleSct(d[selectValue]))
-//           .style("fill", dotFill)
-//           .style("opacity", function(d){
-//             if (d["Country Name"] == bar_data[0].country) {
-//               opacity = 1;
-//               return opacity;
-//             } else if (d["Country Name"] == bar_data[1].country) {
-//               opacity = 1;
-//               return opacity;
-//             } else if (d["Country Code"] == bar_data[2].country) {
-//               opacity = 1;
-//               return opacity;
-//             } else if (isNaN(d.lnyUN) || isNaN(d[selectValue])) {
-//               opacity = 0;
-//               return opacity;
-//             } else {
-//               opacity = 0.25;
-//               return opacity;
-//             }
-//           })
-//           .on("mousemove", mousemovesc)
-//           .on("mouseout", mouseoutsc);
-//     //
-//       console.log(lg.ptA.x);
-//       chartSct.append("line")
-//     	        .attr("class", "regression")
-//     	        .attr("x1", xScaleSct(lg.ptA.x))
-//     	        .attr("y1", yScaleSct(lg.ptA.y))
-//     	        .attr("x2", xScaleSct(lg.ptB.x))
-//     	        .attr("y2", yScaleSct(lg.ptB.y));
-//
-//     })
-//     //
-//
-//
-// }
 
 //what happens when a new attribute is selected from main map menu: repopulate map with new data
 function onchange() {
@@ -1147,9 +847,12 @@ function onchange() {
   d3.select("#bardiv").selectAll("rect").remove();
   d3.select("#scatterdiv").selectAll("svg").remove();
   d3.select("#menu2").selectAll("select").remove();
-   d3.select("#svgtable").selectAll("g").remove();
+  d3.select("#chartheader").selectAll("p").remove();
+  d3.select("#chartheader").selectAll("hr").remove();
+  d3.select("#scrollup").selectAll("button").remove();
+  d3.select("#tablediv").selectAll("table").remove();
 
-
+  d3.select("#chartwrapper").classed("hidden", true);
   // // Load external data and boot
   d3.queue()
     .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
@@ -1166,15 +869,15 @@ function ready(error, topo, info) {
   //map title
   svg.append("text")
     .attr("x", (width/2))
-    .attr("y", 35)
-    .attr("font-size", "24px")
+    .attr("y", 55)
+    .attr("font-size", "36px")
     .attr("text-anchor", "middle")
     .text(setTitle)
 
   // // Legend
   var g = svg.append("g")
     .attr("class", "legendThreshold")
-    .attr("transform", "translate(90,300)");
+    .attr("transform", "translate(30,340)");
   g.append("text")
     .attr("class", "caption")
     .attr("x", 0)
@@ -1192,6 +895,7 @@ function ready(error, topo, info) {
 
   svg.append("g")
     .attr("class", "countries")
+    .attr("transform", "translate(0,60)")
     .selectAll("path")
     .data(topo.features)
     .enter().append("path")
