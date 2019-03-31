@@ -639,7 +639,7 @@ var tabulate = function (data,columns) {
 //var filteredrows = rows.filter(function(data,i){return i == 1;});
  var filteredrows= rows.filter(function(row){
 	 return row['Country Name'] == bar_data[0].country;
-	 return row['Country Name'] == 'World';
+	
  }) ;
  
   var worlddata = rows.filter(function(w){
@@ -649,6 +649,18 @@ var tabulate = function (data,columns) {
  
  
   var cells = filteredrows.selectAll('td')
+    .data(function(row) {
+      return columns.map(function (column) {
+        return { column: column, value: row[column] }
+		
+      })
+    })
+    .enter()
+    .append('td')
+    .text(function (d) { return d.value });
+	
+	//Adds the World row in the data table.
+	 var addworld = worlddata.selectAll('td')
     .data(function(row) {
       return columns.map(function (column) {
         return { column: column, value: row[column] }
